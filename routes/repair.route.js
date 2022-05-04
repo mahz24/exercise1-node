@@ -7,21 +7,25 @@ const {
    updateRepair,
    deleteRepair,
 } = require('../contollers/repair.controller');
+const { repairExists } = require('../middlewer/repair.middlewer');
 const {
-   repairExists,
-   statusIsPending,
-} = require('../middlewer/repair.middlewer');
+   validationsRepair,
+   checkValidationsRepair,
+} = require('../validations/repair.validation');
 
 const router = express.Router();
 
 //Main endpoints
-router.route('/').get(getAllRepairs).post(createRepair);
+router
+   .route('/')
+   .get(getAllRepairs)
+   .post(validationsRepair, checkValidationsRepair, createRepair);
 
 //Endpoints by id
 router
    .route('/:id')
-   .get(repairExists, statusIsPending, getRepairById)
-   .patch(repairExists, statusIsPending, updateRepair)
-   .delete(repairExists, statusIsPending, deleteRepair);
+   .get(repairExists, getRepairById)
+   .patch(repairExists, updateRepair)
+   .delete(repairExists, deleteRepair);
 
 module.exports = { repairsRouter: router };

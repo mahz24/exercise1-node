@@ -1,68 +1,59 @@
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { Repair } = require('../models/repairs');
+const { User } = require('../models/users');
+
+//Errors
+const { catchAsync } = require('../utils/catchAsync');
 
 //all repairs
-const getAllRepairs = async (req, res) => {
-   try {
-      const repairs = await Repair.findAll();
+const getAllRepairs = catchAsync(async (req, res) => {
+   const repairs = await Repair.findAll({
+      include: [{ model: User }],
+   });
 
-      res.status(200).json({ repairs });
-   } catch (error) {
-      console.log(error);
-   }
-};
+   res.status(200).json({ repairs });
+});
 
 //New repair
-const createRepair = async (req, res) => {
-   try {
-      const { date, userId } = req.body;
+const createRepair = catchAsync(async (req, res, next) => {
+   const { date, userId, computerNumber, comments } = req.body;
 
-      const newRepair = await Repair.create({ date, userId });
+   const newRepair = await Repair.create({
+      date,
+      userId,
+      computerNumber,
+      comments,
+   });
 
-      res.status(201).json({ newRepair });
-   } catch (error) {
-      console.log(error);
-   }
-};
+   res.status(201).json({ newRepair });
+});
 
 //Repair by id
-const getRepairById = async (req, res) => {
-   try {
-      const { repair } = req;
+const getRepairById = catchAsync(async (req, res) => {
+   const { repair } = req;
 
-      res.status(201).json({ repair });
-   } catch (error) {
-      console.log(error);
-   }
-};
+   res.status(201).json({ repair });
+});
 
 //Update repair
-const updateRepair = async (req, res) => {
-   try {
-      const { repair } = req;
-      const { status } = req.body;
+const updateRepair = catchAsync(async (req, res) => {
+   const { repair } = req;
+   const { status } = req.body;
 
-      await repair.update({ status });
+   await repair.update({ status });
 
-      res.status(201).json({ status: 'success' });
-   } catch (error) {
-      console.log();
-   }
-};
+   res.status(201).json({ status: 'success' });
+});
 
 //Delete repair
-const deleteRepair = async (req, res) => {
-   try {
-      const { repair } = req;
+const deleteRepair = catchAsync(async (req, res) => {
+   const { repair } = req;
 
-      await repair.update({ status: 'cancelled' });
+   await repair.update({ status: 'cancelled' });
 
-      res.status(200).json({ status: 'success' });
-   } catch (error) {
-      console.log(error);
-   }
-};
+   res.status(200).json({ status: 'success' });
+});
 
 module.exports = {
    getAllRepairs,

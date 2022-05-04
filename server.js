@@ -13,14 +13,14 @@ db.authenticate()
    .then(() => console.log('Database authenticated'))
    .catch(err => console.log(err));
 
-//Establish models relation
-// User.hasMany(Repair);
-// Repair.belongsTo(User);
-
 // Sync sequelize models
 db.sync()
    .then(() => console.log('Database synced'))
    .catch(error => console.log(error));
+
+//Establish models relation
+User.hasMany(Repair);
+Repair.belongsTo(User);
 
 //Server
 const PORT = 2410;

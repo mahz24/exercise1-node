@@ -9,11 +9,18 @@ const {
    updateUser,
    deleteUser,
 } = require('../contollers/user.controller');
+const {
+   validationCreateUser,
+   checkValidationsUser,
+} = require('../validations/user.validation');
 
 const router = express.Router();
 
 //Main endpoint
-router.route('/').get(getAllUser).post(createUser);
+router
+   .route('/')
+   .get(getAllUser)
+   .post(validationCreateUser, checkValidationsUser, createUser);
 
 //Endpoint by id
 router

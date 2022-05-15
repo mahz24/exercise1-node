@@ -21,7 +21,6 @@ const checkValidationsUser = (req, res, next) => {
       const messages = errors.array().map(({ msg }) => msg);
 
       const errMgs = messages.join(', ');
-      console.log('soy un error');
 
       return res.status(400).json({
          status: 'error',

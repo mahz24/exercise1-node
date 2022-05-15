@@ -9,6 +9,7 @@ const { catchAsync } = require('../utils/catchAsync');
 //all repairs
 const getAllRepairs = catchAsync(async (req, res) => {
    const repairs = await Repair.findAll({
+      where: { status: 'pending' },
       include: [{ model: User }],
    });
 

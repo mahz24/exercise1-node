@@ -1,5 +1,8 @@
+//Extentions
 const express = require('express');
+const { get } = require('express/lib/response');
 
+//Controllers Funcions
 const {
    createRepair,
    getAllRepairs,
@@ -7,7 +10,13 @@ const {
    updateRepair,
    deleteRepair,
 } = require('../contollers/repair.controller');
+
+//Validations
 const { repairExists } = require('../middlewer/repair.middlewer');
+const {
+   protectEmployee,
+   protectToken,
+} = require('../middlewer/users.middlewer');
 const {
    validationsRepair,
    checkValidationsRepair,
@@ -16,10 +25,14 @@ const {
 const router = express.Router();
 
 //Main endpoints
-router
-   .route('/')
-   .get(getAllRepairs)
-   .post(validationsRepair, checkValidationsRepair, createRepair);
+router.post('/', validationsRepair, checkValidationsRepair, createRepair);
+
+//Validation role
+router.use(protectToken);
+router.use(protectEmployee);
+
+//Endpoint that get all repairs
+router.get('/', getAllRepairs);
 
 //Endpoints by id
 router

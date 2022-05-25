@@ -22,5 +22,6 @@ const db = new Sequelize({
            }
          : {},
 });
+//Correcion
 
 module.exports = { db };

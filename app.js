@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const compresssion = require('compression');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const rateLimit = require('express-rate-limit');
 
 dotenv.config({ path: './config.env' });
 
@@ -24,6 +25,14 @@ app.use(compresssion());
 //Log incoming requests
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 else morgan('combined');
+
+const limiter = rateLimit({
+   max: 10000,
+   windowMs: 1 * 60 * 1000,
+   message: 'Too many request from this IP',
+});
+
+app.use(limiter);
 
 // Endpoints
 app.use('/api/v1/users', usersRouter);
